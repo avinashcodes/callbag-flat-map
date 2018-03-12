@@ -1,0 +1,28 @@
+{
+  "name": "callbag-flat-map",
+  "version": "1.0.0",
+  "description": "A callbag operator that flattens/merges sources",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avinashcodes/callbag-flat-map.git"
+  },
+  "keywords": [
+    "callbag"
+  ],
+  "author": "Avinash Anupoju",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/avinashcodes/callbag-flat-map/issues"
+  },
+  "homepage": "https://github.com/avinashcodes/callbag-flat-map#readme",
+  "devDependencies": {
+    "tape": "^4.9.0"
+  },
+  "dependencies": {
+    "callbag-basics": "^2.0.1"
+  }
+}
