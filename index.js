@@ -6,6 +6,7 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
     let index = 0;
     let talkbacks = {};
     let sourceEnded = false;
+    let inputSourceTalkback = null;
 
     let pullHandle = (t, d) => {
         var currTalkback = Object.values(talkbacks).pop();
