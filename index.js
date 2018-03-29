@@ -10,8 +10,8 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
     let pullHandle = (t, d) => {
         var currTalkback = Object.values(talkbacks).pop();
         if (t === 1) {
-            if (currTalkback) currTalkback(1);
-            else if (!sourceEnded) inputSourceTalkback(1);
+            if (currTalkback) currTalkback(1,d);
+            else if (!sourceEnded) inputSourceTalkback(1,d);
             else sink(2);
         }
         if (t === 2) {
