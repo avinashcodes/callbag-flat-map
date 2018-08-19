@@ -153,6 +153,30 @@ test('it should flatten pullable inner sources to a pullable output source even 
 	t.end();
 });
 
+test('it should flatten listenable inner sources to a listenable output source even if the input source is pullable', t=>{
+	'use strict';
+	const doSomething = () => listenableOf(0, 1, 2);
+	const inputSource = fromIter(range(0, 2));
+	const outputSource = flatMap(doSomething, (a, b) => a + '-' + b)(inputSource);
+
+	const expectedValues = ['0-0', '0-1', '0-2', '1-0', '1-1', '1-2', '2-0', '2-1', '2-2'];
+	const actualValues = [];
+	let stopped = false;
+	let talkback;
+	outputSource(0, (type, d) => {
+		if (type === 0) talkback = d;
+		if (type === 1) actualValues.push(d);
+		if (type === 2) {
+			stopped = true;
+			t.equal(actualValues.length, expectedValues.length, 'Got only the right values');
+			t.deepEqual(actualValues, expectedValues, 'Got all values in the right order');
+		}
+	});
+	talkback(1);
+	t.ok(stopped, 'Got end before returning from output source');
+	t.end();
+});
+
 test('it should immediately send upstream messages to the oldest inner source without waiting for a push response to the previous message', t=>{
 	t.plan(3);
 	const doSomething = value => (start, sink) => {

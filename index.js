@@ -7,6 +7,7 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
     let currIdx = NaN;
     let talkbacks = {};
     let sourceEnded = false;
+    let innerEnded = false;
     let endRequested = false;
     let firstErr;
     let msgQueue = [];
@@ -25,9 +26,17 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
                 sink(2, firstErr);
                 break;
             }
-            if (msgIdx >= msgQueue.length) break;
-            if (currTalkback) currTalkback(1, msgQueue[msgIdx++]);
-            else inputSourceTalkback(1, msgQueue[msgIdx]);
+            let pullInput = innerEnded;
+            innerEnded = false;
+            if (currTalkback) {
+                if (msgIdx >= msgQueue.length) break;
+                currTalkback(1, msgQueue[msgIdx++]);
+            }
+            else if (msgIdx < msgQueue.length) {
+                inputSourceTalkback(1, msgQueue[msgIdx]);
+            }
+            else if (pullInput) inputSourceTalkback(1);
+            else break;
         }
         inloop = false;
     }
@@ -58,6 +67,7 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
                 firstErr = firstErr || currD;
             }
             if (currT === 0 || currT === 1 || currT === 2) {
+                if (currT === 2) innerEnded = true;
                 if (!inloop) loop();
             }
         }
