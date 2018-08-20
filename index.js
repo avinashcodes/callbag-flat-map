@@ -3,11 +3,12 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
 
     if (!combineResults) combineResults = (x, y) => y;
 
+    let inputSourceTalkback;
     let index = 0;
     let currIdx = NaN;
     let talkbacks = {};
     let sourceEnded = false;
-    let innerEnded = false;
+    let needNewInner = true;
     let endRequested = false;
     let firstErr;
     let msgQueue = [];
@@ -26,17 +27,20 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
                 sink(2, firstErr);
                 break;
             }
-            let pullInput = innerEnded;
-            innerEnded = false;
             if (currTalkback) {
                 if (msgIdx >= msgQueue.length) break;
                 currTalkback(1, msgQueue[msgIdx++]);
             }
-            else if (msgIdx < msgQueue.length) {
-                inputSourceTalkback(1, msgQueue[msgIdx]);
+            else {
+                if (msgIdx < msgQueue.length) {
+                    inputSourceTalkback(1, msgQueue[msgIdx]);
+                }
+                else if (needNewInner) {
+                    needNewInner = false;
+                    inputSourceTalkback(1);
+                }
+                else break;
             }
-            else if (pullInput) inputSourceTalkback(1);
-            else break;
         }
         inloop = false;
     }
@@ -57,6 +61,7 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
                     msgIdx--;
                 }
                 if (currT === 2) {
+                    needNewInner = msgQueue.length === 0;
                     currIdx = +Object.keys(talkbacks)[1];
                     msgIdx = 0;
                 }
@@ -67,7 +72,6 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
                 firstErr = firstErr || currD;
             }
             if (currT === 0 || currT === 1 || currT === 2) {
-                if (currT === 2) innerEnded = true;
                 if (!inloop) loop();
             }
         }
@@ -83,8 +87,8 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
         if (t === 2) {
             sourceEnded = true;
             firstErr = firstErr || d;
-            if (!inloop) loop();
         }
+        if ((t === 0 || t === 2) && !inloop) loop();
     });
 }
 
