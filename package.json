@@ -1,6 +1,6 @@
 {
   "name": "callbag-flat-map",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A callbag operator that flattens/merges sources",
   "main": "index.js",
   "scripts": {
@@ -20,9 +20,9 @@
   },
   "homepage": "https://github.com/avinashcodes/callbag-flat-map#readme",
   "devDependencies": {
-    "tape": "^4.9.0"
+    "tape": "^4.9.0",
+    "callbag-basics": "^2.0.1",
+    "callbag-switch-map": "^1.0.0"
   },
-  "dependencies": {
-    "callbag-basics": "^2.0.1"
-  }
+  "dependencies": {}
 }
