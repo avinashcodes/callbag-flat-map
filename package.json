@@ -1,6 +1,6 @@
 {
   "name": "callbag-flat-map",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A callbag operator that flattens/merges sources",
   "main": "index.js",
   "scripts": {

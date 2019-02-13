@@ -28,9 +28,8 @@ const flatmap = (makeSource, combineResults) => inputSource => (start, sink) => 
 
     let makeSink = (i, d, talkbacks) =>
         (currT, currD) => {
-            if (currT === 0) talkbacks[i] = currD;
+            if (currT === 0) {talkbacks[i] = currD; talkbacks[i](1);};
             if (currT === 1) sink(1, combineResults(d, currD));
-            if (currT === 0 || currT === 1) talkbacks[i](1);
             if (currT === 2) {
                 delete talkbacks[i];
                 stopOrContinue(currD);
