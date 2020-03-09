@@ -1,6 +1,6 @@
 # callbag-flat-map 👜
 
-A callbag operator that creates and flates to the new source whenever original source emits
+A callbag operator that creates and flattens to the new source whenever original source emits
 
 `npm install callbag-flat-map`
 
